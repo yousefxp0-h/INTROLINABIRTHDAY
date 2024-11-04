@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Lina</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            color: #fff;
+            margin: 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 70px;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        .message, .question {
+            font-size: 40px;
+            margin: 20px;
+        }
+
+        .next-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none; /* Hidden initially */
+        }
+
+        .question {
+            display: none; /* Hidden initially */
+        }
+
+        .answer-btn {
+            font-size: 30px;
+            padding: 15px 30px;
+            margin-top: 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #happyBirthdayMessage {
+            font-size: 60px;
+            color: #ff69b4;
+            font-weight: bold;
+            animation: shake 0.8s infinite; /* Shake effect */
+            position: relative;
+            display: none; /* Hidden initially */
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #countdown {
+            display: none; /* Hidden initially */
+            font-size: 50px;
+            color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intro video -->
+    <video id="introVideo" controls autoplay muted>
+        <source src="video_2024-09-25_03-50-59.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Final video -->
+    <video id="finalVideo" style="display:none;" muted>
+        <source src="video_2024-09-25_04-10-55.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Happy Birthday message -->
+    <div id="happyBirthdayMessage" class="message">Happy Birthdaaaaaaaaayyyyyyy 🎉🎉🎉❤️</div>
+
+    <!-- Audio Elements -->
+    <audio id="birthdaySong" src="happybirthday.mp3"></audio>
+    <audio id="explosionSound" src="explosion.mp3"></audio>
+    <audio id="countdownVoice" src="countdown_voice.mp3"></audio>
+
+    <!-- Next Button -->
+    <button id="nextBtn" class="next-btn" onclick="showQuestion1()">Next</button>
+
+    <!-- Questions -->
+    <div id="question1" class="question">
+        <p>يا ترى يا لينة المفاجأة دي متوقعة انها تكون جامدة موت؟ (قولي لا)</p>
+        <button class="answer-btn" onclick="answerQuestion1('no')">لا</button>
+        <button class="answer-btn" onclick="answerQuestion1('yes')">ايوة</button>
+    </div>
+
+    <div id="question2" class="question">
+        <p>السؤال التاني يا لولتي يا ترى هتلاقي حد زيي كده مهتم بكل التفاصيل دي؟</p>
+        <input type="text" id="answer2" style="font-size: 30px;">
+        <button class="answer-btn" onclick="nextQuestion(3)">Next</button>
+    </div>
+
+    <div id="question3" class="question">
+        <p>يا ترى بقه انا احلى على كده ولا مارلين؟</p>
+        <button class="answer-btn" onclick="nextQuestion(4, true)">انت يا يوسف مفيهاش كلام</button>
+        <button class="answer-btn" onclick="nextQuestion(4, true)">أكيد مارلين</button>
+    </div>
+
+    <div id="question4" class="question">
+        <p>لينة لو رجع بيكي الزمن تختاري نكمل مع بعض؟</p>
+        <input type="text" id="answer4" style="font-size: 30px;">
+        <button class="answer-btn" onclick="nextQuestion(5)">Next</button>
+    </div>
+
+    <div id="question5" class="question">
+        <p>يبنتي خلاص ده السؤال الاخير بقه شعورك اتجاهي ايه؟</p>
+        <button class="answer-btn" onclick="finish()">عادي</button>
+        <button class="answer-btn" onclick="finish()">زي اخويا</button>
+        <button class="answer-btn" onclick="finish()">بحبك</button>
+        <button class="answer-btn" onclick="finish()">صاحب</button>
+    </div>
+
+    <div id="countdown" class="message"></div>
+
+    <script>
+        window.onload = function() {
+            var introVideo = document.getElementById('introVideo');
+            introVideo.muted = false; // Unmute the video
+            introVideo.play();
+
+            introVideo.onended = function() {
+                introVideo.style.display = 'none'; // Hide the video after it ends
+                showHappyBirthdayMessage();
+            };
+        };
+
+        function showHappyBirthdayMessage() {
+            document.getElementById('happyBirthdayMessage').style.display = 'block';
+            playHappyBirthday();
+            playExplosionSound();
+            showNextButton(); // Show "Next" button after the birthday message
+        }
+
+        function playHappyBirthday() {
+            var birthdaySong = document.getElementById('birthdaySong');
+            birthdaySong.play();
+        }
+
+        function playExplosionSound() {
+            var explosionSound = document.getElementById('explosionSound');
+            explosionSound.play();
+        }
+
+        function showNextButton() {
+            document.getElementById('nextBtn').style.display = 'block'; // Show "Next" button
+        }
+
+        function showFinalVideo() {
+            var finalVideo = document.getElementById('finalVideo');
+            finalVideo.style.display = 'block'; // Show final video
+            finalVideo.muted = false; // Unmute final video
+            finalVideo.play(); // Play final video
+
+            finalVideo.onended = function() {
+                window.location.href = "https://yousefxp0-h.github.io/LINABIRTHDAY/";  // Redirect after video ends
+            };
+        }
+
+        function showQuestion1() {
+            document.getElementById('happyBirthdayMessage').style.display = 'none';
+            document.getElementById('question1').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none'; // Hide "Next" button after showing question
+        }
+
+        function answerQuestion1(answer) {
+            if (answer === 'no') {
+                alert("لا ايه يبت قولي ايوة 😡");
+            } else {
+                alert("ايووةة كده");
+                nextQuestion(2);
+            }
+        }
+
+        function nextQuestion(questionNumber, showNext = false) {
+            for (var i = 1; i <= 5; i++) {
+                document.getElementById('question' + i).style.display = 'none';
+            }
+            document.getElementById('question' + questionNumber).style.display = 'block';
+            if (showNext) {
+                document.getElementById('nextBtn').style.display = 'block'; // Show "Next" button
+            } else {
+                document.getElementById('nextBtn').style.display = 'none'; // Hide
+            }
+        }
+
+        function finish() {
+            alert("تم الانتهاء من الأسئلة! استعدي للهدية 🎁");
+            showFinalVideo(); // Show final video
+        }
+    </script>
+
+</body>
+</html>
